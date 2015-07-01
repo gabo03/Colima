@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  remote_user: ubuntu
+  sudo: no 
+  tasks:
+
+  - name: Test that git ssh connection is working.
+    command: ssh -T git@github.com
+
+

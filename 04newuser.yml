@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  user: ubuntu
+  sudo: yes
+
+  vars:
+    - admin_password: $6$6VEJ3xplgrTxSg$PL2Ss5hpNRY0aHmFerKQ5F6grkJNvSzxVxrf6FZWEL9rMq1HVp53qocx538xX7/F.f/srbOd6djd/HvuycNKe. #gabo03
+
+  tasks:
+  - name: Create user
+    user: name=deploy password={{ admin_password }} groups=sudo append=yes shell=/bin/bash

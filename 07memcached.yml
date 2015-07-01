@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  user: ubuntu
+  sudo: yes
+  vars:
+  - memcached_config: /etc/memcached.conf
+
+  tasks:
+  
+  - name: Memcached | Install Memcached package 
+    apt: pkg=memcached state=present
+
+  - name: Memcached | Push default configuration template
+    template: src=/home/ubuntu/memcached/templates/memcached.conf.j2 dest=/etc/memcached.conf owner=root group=root mode=0644
+
+  - name: Memcached | Insure deamon is running correctly
+    service: name=memcached state=started
+
+  - name: Memcached | Change max memory to 512mb
+    lineinfile: dest={{ memcached_config }} regexp="^#?-m 64" line="-m 512"
+    notify: restart memcached
+
+  - name: restart memcached
+    action: service name=memcached state=restarted enabled=yes

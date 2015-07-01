@@ -1,0 +1,29 @@
+---
+
+- hosts: localhost
+  user: ubuntu
+  sudo: yes
+  vars:
+    - version: 1.9.2
+
+  tasks:
+  - name: Install dependencies
+    command: apt-get -y install libpcre3 libpcre3-dev libgd2-xpm-dev libgeoip-dev libpam0g-dev libcurl4-gnutls-dev zlibc zlib1g zlib1g-dev
+
+  - name: Download Source
+    get_url: url=http://nginx.org/download/nginx-{{ version }}.tar.gz dest=/opt/
+
+  - name: Unzip Nginx Tar
+    unarchive: src=/opt/nginx-{{ version }}.tar.gz dest=/opt copy=no
+
+  - name: Change attributes
+    file: path=/opt/nginx-{{ version }} owner=ubuntu group=ubuntu mode=0777 state=directory recurse=yes
+
+  - name: Compile Nginx
+    shell: /opt/nginx-{{ version }}/configure --prefix=/opt/nginx2 --sbin-path=/opt/nginx2/sbin/nginx --conf-path=/opt/nginx2/conf/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/ninx.lock --user=ubuntu --with-http_geoip_module --with-http_gzip_static_module --with-http_secure_link_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_ssi_module
+
+  - name: Make
+    shell: /usr/bin/make chdir=/opt/nginx-{{ version }}/
+
+  - name: Make Install
+    shell: /usr/bin/make install chdir=/opt/nginx-{{ version }}/

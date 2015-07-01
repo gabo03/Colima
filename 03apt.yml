@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost
+  user: ubuntu
+  sudo: yes
+
+  tasks:
+  - name: Install Packages
+    command: apt-get -y install htop imagemagick file vim build-essential git libcurl4-openssl-dev libpq-dev libssl-dev libxml2-dev libxslt1-dev zlib1g-dev
+
